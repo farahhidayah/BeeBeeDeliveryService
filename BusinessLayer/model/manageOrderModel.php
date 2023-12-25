@@ -27,9 +27,9 @@ class manageOrderModel{
     }
 
     //add item to the cart
-    function addToCart(){
-        $sql = "insert into order1(custID, serviceID, itemname, itemprice, itemquantity) values(:custID, :serviceID, :itemname, :itemprice, :itemquantity)";
-        $args = [':custID'=>$this->custID, ':serviceID'=>$this->serviceID, ':itemname'=>$this->itemname, ':itemprice'=>$this->itemprice, ':itemquantity'=>$this->itemquantity];
+    function addToCart($custID, $serviceID, $itemname, $itemprice, $itemquantity) {
+        $sql = "INSERT INTO order1 (custID, serviceID, itemname, itemprice, itemquantity) VALUES (:custID, :serviceID, :itemname, :itemprice, :itemquantity)";
+        $args = [':custID' => $custID, ':serviceID' => $serviceID, ':itemname' => $itemname, ':itemprice' => $itemprice, ':itemquantity' => $itemquantity];
         return DB::run($sql, $args);
     }
 
@@ -50,6 +50,18 @@ class manageOrderModel{
         $sql = "update order1 set itemname=:itemname, itemprice=:itemprice, itemquantity=:itemquantity where serviceID = :serviceID and custID = :custID";
         $args = [':serviceID'=>$this->serviceID, ':custID'=>$this->custID, ':itemname'=>$this->itemname, ':itemprice'=>$this->itemprice, ':itemquantity'=>$this->itemquantity];
         return DB::run($sql,$args);
+    }
+    
+    function getCartItem($custID, $serviceID) {
+    $sql = "SELECT * FROM order1 WHERE custID = :custID AND serviceID = :serviceID";
+    $args = [':custID' => $custID, ':serviceID' => $serviceID];
+    return DB::run($sql, $args)->fetch();
+    }
+
+    function updateCartItem($custID, $serviceID, $quantity) {
+        $sql = "UPDATE order1 SET itemquantity = :quantity WHERE custID = :custID AND serviceID = :serviceID";
+        $args = [':custID' => $custID, ':serviceID' => $serviceID, ':quantity' => $quantity];
+        return DB::run($sql, $args);
     }
 }
 ?>
