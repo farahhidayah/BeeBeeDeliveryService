@@ -31,7 +31,21 @@ class manageOrderController{
         $service->itemname = $_POST['itemname'];
         $service->itemprice = $_POST['itemprice'];
         $service->itemquantity = $_POST['itemquantity'];
-        return $service->addToCart();
+    
+        // Check if the item already exists in the cart and update or insert accordingly
+        $existingCartItem = $service->getCartItem($service->custID, $service->serviceID);
+    
+        if ($existingCartItem) {
+            // Item exists in the cart, update its quantity
+            $service->updateCartItem($service->custID, $service->serviceID, $existingCartItem['itemquantity'] + $service->itemquantity);
+        } else {
+            // Item doesn't exist, add a new entry to the cart
+            $service->addToCart($service->custID, $service->serviceID, $service->itemname, $service->itemprice, $service->itemquantity);
+        }
+    
+        // Redirect to the page where the cart is displayed or managed
+        header("Location: ./customerViewCart.php?custID=".$_SESSION['custID']);
+        exit();
     }
 
     //to view the cart
