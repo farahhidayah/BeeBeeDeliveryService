@@ -32,9 +32,23 @@ class manageServiceModel{
     }
     
     function updateItem(){
-        $sql = "update service set itemname=:itemname, itemprice=:itemprice, servicetype=:servicetype where serviceID=:serviceID";
-        $args = [':serviceID'=>$this->serviceID, ':itemname'=>$this->itemname, ':itemprice'=>$this->itemprice, ':servicetype'=>$this->servicetype];
-        return DB::run($sql,$args);
-    }
+        $sql = "UPDATE service SET itemname = :itemname, itemprice = :itemprice, servicetype = :servicetype";
+        $args = [
+            ':itemname' => $this->itemname,
+            ':itemprice' => $this->itemprice,
+            ':servicetype' => $this->servicetype,
+            ':serviceID' => $this->serviceID
+        ];
+    
+        // Check if a new image is provided
+        if (!empty($this->itemimage)) {
+            $sql .= ", itemimage = :itemimage";
+            $args[':itemimage'] = $this->itemimage;
+        }
+    
+        $sql .= " WHERE serviceID = :serviceID";
+        
+        return DB::run($sql, $args);
+    } 
 }
 ?>
