@@ -76,8 +76,8 @@
                     <td><input type="text" name="itemprice" value="<?=$row['itemprice']?>" required></td>
                 </tr>
                 <tr>
-                    <td>Item Image:&emsp;&emsp;</td>
-                    <td><img src="<?=$row['itemimage']?>" width="95px" height="95px" border="1px solid black" style="margin-top: 2px;"></td>
+                    <td>New Item Image:&emsp;&emsp;</td>
+                    <td><input type="file" name="new_itemimage" accept="image/*" onchange="loadFile(event)"></td>
                 </tr>
                 <tr>
                     <td colspan="5" style="text-align: right"><button type="submit" name="update" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> &nbsp;Update Service</button></td>
@@ -86,6 +86,19 @@
             <?php } ?>
             </div>
         </form>
+        <?php
+            if(isset($_POST['update'])){
+                $success = $item->update();
+                if($success){
+                    echo '<div style="margin-top: 20px; color: green;">Update Successful!</div>';
+                } else {
+                    echo '<div style="margin-top: 20px; color: red;">Update Failed!</div>';
+                }
+            }
+        ?>
+        <br>
+        <a href="./serviceProviderServiceView.php" class="btn btn-primary">Go to Homepage</a>
+
       </center>  
     </body>
 </html>
