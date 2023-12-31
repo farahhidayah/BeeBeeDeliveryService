@@ -51,22 +51,45 @@ class manageServiceController{
         $item->serviceID = $serviceID;
         return $item->viewPerItem();
     }
-
-    function update(){
+     
+     function update(){
         $item = new manageServiceModel();
         $item->serviceID = $_POST['serviceID'];
         $item->itemname = $_POST['itemname'];
         $item->itemprice = $_POST['itemprice'];
         $item->servicetype = $_POST['servicetype'];
-
-        if($item->updateItem()){
-            $message = "Success Update!";
-		    echo "<script type='text/javascript'>alert('$message');
-		    window.location = '../../ApplicationLayer/manageService/serviceProviderServiceView.php?spID=".$_SESSION['spID']."';</script>";
-        }
-    }
-
-}
-
-?>
+        $updateSuccess = false;
     
+        // Handle image update
+        if ($_FILES['new_itemimage']['size'] > 0) {
+            // Process the new image and update the item image in the model
+            $target_dir = "upload/";
+            $target_file = $target_dir . basename($_FILES["new_itemimage"]["name"]);
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    
+            // Check file extension
+            $extensions_arr = array("jpg", "jpeg", "png", "gif");
+            if (in_array($imageFileType, $extensions_arr)) {
+                // Temporary file location
+                $temp_file = $_FILES['new_itemimage']['tmp_name'];
+    
+                // Read the image file content
+                $image_content = file_get_contents($temp_file);
+    
+                // Encode image content in base64
+                $base64_image = base64_encode($image_content);
+    
+                // Set the itemimage property in the model with base64 encoded data
+                $item->itemimage = 'data:image/' . $imageFileType . ';base64,' . $base64_image;
+            }
+        }
+    
+        if($item->updateItem()){
+            // Your success message and redirection logic
+            $updateSuccess = true;
+        }
+    
+        return $updateSuccess;
+    }
+    }
+?>
